@@ -146,7 +146,13 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
         setProperty: function() {
 
             this.node.forEach(function(n){
-                if (Object.keys)
+                Object.keys(n).forEach(function(key) {
+                    if (key=="style") {
+                        
+                        
+                    }
+                    
+                })
                 
             
                 for (var i in n ) {
