@@ -144,28 +144,19 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
     var node = {
 
         setProperty: function() {
-
             this.node.forEach(function(n){
                 Object.keys(n).forEach(function(key) {
                     if (key=="style") {
+                        var arr = Object.entries(n.style);
+                        this.cssText = "";
+                        for (var i = 0;i<arr[0].length;i++){
+                            this.cssText += arr[0][i] + ":" +  arr[1][i] + ";";
+                        } 
+                    } else {
                         
-                        
-                    }
-                    
-                })
-                
-            
-                for (var i in n ) {
-                    while (Object.keys(i)) {
-                        if (Object.keys(i).length==1) {
-                            p.push(Object.keys(i)[0])
-                        } else {
-                            return;
-                        }
-                    }
-                   this.node["style"][]
-                return;
-            })
+                    };                
+                });}
+            );
             
         },
         
@@ -185,9 +176,9 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
         }
     };
     var calflxI = {
-//        settextContent: function (text) {
-//            this.textContent = text;
-//        },
+        settextContent: function (text) {
+            this.textContent = text;
+        },
         style: {
             flex: "1 0 14%",
             textAlign: "center"
