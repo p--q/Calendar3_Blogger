@@ -72,7 +72,7 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
             cal.createURL(max);  // フィードを取得するためのURLを作成。            
         },
         createCalendar:  function() {  // カレンダーのHTML要素を作成。 
-            var calflxC = nd.calflxC();  // カレンダーのflexコンテナを得る。
+            var calflxC = nd.getcalflxC();  // カレンダーのflexコンテナを得る。
             calflxC.appendChild(nd.arrowflxI('\u00ab',"left_calendar"));  // 左向き矢印のflexアイテム。flexBasis14%。
             var title =  (vars.L10N)?((vars.order=="published")?"":"updated"):((vars.order=="published")?"":"更新");
             title = (vars.L10N)?vars.enM[vars.m-1] + " " + vars.y + " " + title:vars.y + "年" + vars.m + "月" + title;
@@ -141,32 +141,53 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
             return ("0" + m).slice(-2);
         }
     };  // end of cal
-    var node = {
-
-        setProperty: function() {
-            this.node.forEach(function(n){
-                Object.keys(n).forEach(function(key) {
-                    if (key=="style") {
-                        var arr = Object.entries(n.style);
-                        this.cssText = "";
-                        for (var i = 0;i<arr[0].length;i++){
-                            this.cssText += arr[0][i] + ":" +  arr[1][i] + ";";
-                        } 
-                    } else {
-                        
-                    };                
-                });}
-            );
-            
+    var nd = {
+        getcalflxC: function() {
+            this.createNode("div"); 
+            this.setProperty(calflxC);
+            return this.node;
         },
-        
-        createNode: function() {
-            this.node = document.createElement(this.tag); ;
-            
+        setProperty: function(dom) {
+            Object.keys(dom).forEach(function(key) {
+                if (key=="style") {
+                    
+                    
+                    
+                    module.exports = function entries(O) {
+                        var obj = ES.RequireObjectCoercible(O);
+                        var entrys = [];
+                        for (var key in obj) {
+                                if (has(obj, key) && isEnumerable(obj, key)) {
+                                        entrys.push([key, obj[key]]);
+                                }
+                        }
+                        return entrys;
+                    };
+                    
+                    
+                    
+                    if (!Object.entries) {
+                    Object.entries = function entries(O) {
+                            return reduce(keys(O), (e, k) => concat(e, typeof k === 'string' && isEnumerable(O, k) ? [[k, O[k]]] : []), []);
+                    };
+            }
+                    
+                    
+                    
+                    var arr = Object.entries(dom.style);
+                    var cssText = "";
+                    for (var i = 0;i<arr[0].length;i++){
+                        cssText += arr[0][i] + ":" +  arr[1][i] + ";";
+                    } 
+                    this.node.style.cssText = cssText;
+                } else {
+                    this.node[key] = dom[key];
+                };                
+            });
+        },       
+        createNode: function(tag) {
+            this.node = document.createElement(tag);  // flexアイテムになるdiv要素を生成。
         }
-        
-        
-        
     };
     
     var calflxC = {
@@ -187,96 +208,96 @@ var Calendar2_Blogger = Calendar2_Blogger || function() {
     
 
     
-    var nd = {  // HTML要素のノードを作成するオブジェクト。
-        calflxC: function() {  // カレンダーのflexコンテナを返す。
-            var node = eh.createElem("div");  // flexコンテナになるdiv要素を生成。
-            node.style.display = "flex";  // flexコンテナにする。
-            node.style.flexWrap = "wrap";  // flexコンテナの要素を折り返す。 
-            return node;
-        },
-        calflxI: function(text) {  // カレンダーのflexアイテムを返す。
-            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
-            node.textContent = text;
-            node.style.flex = "1 0 14%";  // flexアイテムの最低幅を1/7弱にして均等に拡大可能とする。
-            node.style.textAlign = "center";  // flexアイテムの内容を中央寄せにする。  
-            return node;
-        },
-        dateflxIWithPost: function(date) {  // 投稿の日のflexアイテムを返す。
-            var node = nd.calflxI(); // カレンダーのflexアイテムを取得。  
-            node.className = "post";  // クラス名をpostにする。
-            node.textContent = date;  // 日をtextノードに取得。textContentで代入すると子ノードは消えてしまうので注意。
-            node.style.backgroundColor = "rgba(128,128,128,.4)";  // 背景色
-            node.style.borderRadius = "50%";  // 背景の角を丸める
-            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
-            return node;
-        },
-        datePostsNode: function() {  // 日の投稿データを表示させるflexコンテナを返す。
-            var node = eh.createElem("div");  // flexコンテナになるdiv要素を生成。
-            node.style.display = "flex";  // flexコンテナにする。
-            node.id = vars.dataPostsID;  // idを設定。
-            node.style.flexDirection = "column";  // flexアイテムを縦並びにする。
-            return node;
-        },
-        _postflxC: function() {  // 日の投稿のdiv要素を返す。
-            var node = eh.createElem("div");  // div要素を生成。
-            node.style.borderTop = "dashed 1px rgba(128,128,128,.5)";
-            node.style.paddingTop = "5px";       
-            return node;
-        },
-        _imgflxI: function(arr) {  // サムネイル画像の投稿のdiv要素を返す。引数は配列。
-            var node = eh.createElem("div");  // div要素を生成。
-            var img = eh.createElem("img");
-            img.src = arr[2];  // 配列からサムネイル画像のurlを取得。
-            var a = nd._a(arr);  // 投稿のurlを入れたa要素を取得。
-            a.appendChild(img);  // サムネイル画像のノードをa要素に追加。
-            node.appendChild(a);            
-            return node;
-        },
-        _a: function(arr) {  // 投稿のurlを入れたa要素を返す。
-            var node = eh.createElem("a"); 
-            node.href = arr[0];  // 配列から投稿のurlを取得。
-            return node;
-        },
-        _titleflxI: function(arr) {  // 投稿タイトルの投稿のdiv要素を返す。
-            var node = eh.createElem("div");  //div要素を生成。
-            var a = nd._a(arr);
-            a.textContent = arr[1];
-            node.appendChild(a);            
-            return node;
-        },
-        postNode: function(arr) {  // 引数は[投稿のURL, 投稿タイトル, サムネイルのURL]の配列。
-            var node = nd._postflxC(); // 日の投稿のflexコンテナを取得。
-            if (arr[2]) {  // サムネイルがあるとき
-                var imgflxI = nd._imgflxI(arr);  // サムネイル画像を入れる投稿のdiv要素。引数は配列。
-                imgflxI.style.float = "left";  // 画像の周りのテキストを右から下に回りこませる。
-                imgflxI.style.padding = "0 5px 5px 0";  // 右と下に5px空ける。
-                node.appendChild(imgflxI);
-            }
-            var titleflxI = nd._titleflxI(arr);
-            node.appendChild(titleflxI);
-            return node;
-        },
-        arrowflxI: function(text,id) {  // 月を移動するボタンを返す。
-            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
-            node.textContent = text;
-            node.id = id;
-            node.style.flex = "0 0 14%";  // 1/7幅で伸縮しない。
-            node.style.textAlign = "center";
-            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
-            node.title = (vars.L10N)?((id=="left_calendar")?"Newer":"Older"):((id=="left_calendar")?"翌月へ":"前月へ");
-            return node;
-        },
-        titleflxI: function(title) {
-            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
-            node.textContent = title;
-            node.id = "title_calendar";
-            node.style.flex = "1 0 72%";
-            node.style.textAlign = "center";
-            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
-            node.title = (vars.L10N)?"Switching between published and updated":"公開日と更新日を切り替える";
-            return node;
-        }
-    };  // end of nd
+//    var nd = {  // HTML要素のノードを作成するオブジェクト。
+//        calflxC: function() {  // カレンダーのflexコンテナを返す。
+//            var node = eh.createElem("div");  // flexコンテナになるdiv要素を生成。
+//            node.style.display = "flex";  // flexコンテナにする。
+//            node.style.flexWrap = "wrap";  // flexコンテナの要素を折り返す。 
+//            return node;
+//        },
+//        calflxI: function(text) {  // カレンダーのflexアイテムを返す。
+//            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
+//            node.textContent = text;
+//            node.style.flex = "1 0 14%";  // flexアイテムの最低幅を1/7弱にして均等に拡大可能とする。
+//            node.style.textAlign = "center";  // flexアイテムの内容を中央寄せにする。  
+//            return node;
+//        },
+//        dateflxIWithPost: function(date) {  // 投稿の日のflexアイテムを返す。
+//            var node = nd.calflxI(); // カレンダーのflexアイテムを取得。  
+//            node.className = "post";  // クラス名をpostにする。
+//            node.textContent = date;  // 日をtextノードに取得。textContentで代入すると子ノードは消えてしまうので注意。
+//            node.style.backgroundColor = "rgba(128,128,128,.4)";  // 背景色
+//            node.style.borderRadius = "50%";  // 背景の角を丸める
+//            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+//            return node;
+//        },
+//        datePostsNode: function() {  // 日の投稿データを表示させるflexコンテナを返す。
+//            var node = eh.createElem("div");  // flexコンテナになるdiv要素を生成。
+//            node.style.display = "flex";  // flexコンテナにする。
+//            node.id = vars.dataPostsID;  // idを設定。
+//            node.style.flexDirection = "column";  // flexアイテムを縦並びにする。
+//            return node;
+//        },
+//        _postflxC: function() {  // 日の投稿のdiv要素を返す。
+//            var node = eh.createElem("div");  // div要素を生成。
+//            node.style.borderTop = "dashed 1px rgba(128,128,128,.5)";
+//            node.style.paddingTop = "5px";       
+//            return node;
+//        },
+//        _imgflxI: function(arr) {  // サムネイル画像の投稿のdiv要素を返す。引数は配列。
+//            var node = eh.createElem("div");  // div要素を生成。
+//            var img = eh.createElem("img");
+//            img.src = arr[2];  // 配列からサムネイル画像のurlを取得。
+//            var a = nd._a(arr);  // 投稿のurlを入れたa要素を取得。
+//            a.appendChild(img);  // サムネイル画像のノードをa要素に追加。
+//            node.appendChild(a);            
+//            return node;
+//        },
+//        _a: function(arr) {  // 投稿のurlを入れたa要素を返す。
+//            var node = eh.createElem("a"); 
+//            node.href = arr[0];  // 配列から投稿のurlを取得。
+//            return node;
+//        },
+//        _titleflxI: function(arr) {  // 投稿タイトルの投稿のdiv要素を返す。
+//            var node = eh.createElem("div");  //div要素を生成。
+//            var a = nd._a(arr);
+//            a.textContent = arr[1];
+//            node.appendChild(a);            
+//            return node;
+//        },
+//        postNode: function(arr) {  // 引数は[投稿のURL, 投稿タイトル, サムネイルのURL]の配列。
+//            var node = nd._postflxC(); // 日の投稿のflexコンテナを取得。
+//            if (arr[2]) {  // サムネイルがあるとき
+//                var imgflxI = nd._imgflxI(arr);  // サムネイル画像を入れる投稿のdiv要素。引数は配列。
+//                imgflxI.style.float = "left";  // 画像の周りのテキストを右から下に回りこませる。
+//                imgflxI.style.padding = "0 5px 5px 0";  // 右と下に5px空ける。
+//                node.appendChild(imgflxI);
+//            }
+//            var titleflxI = nd._titleflxI(arr);
+//            node.appendChild(titleflxI);
+//            return node;
+//        },
+//        arrowflxI: function(text,id) {  // 月を移動するボタンを返す。
+//            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
+//            node.textContent = text;
+//            node.id = id;
+//            node.style.flex = "0 0 14%";  // 1/7幅で伸縮しない。
+//            node.style.textAlign = "center";
+//            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+//            node.title = (vars.L10N)?((id=="left_calendar")?"Newer":"Older"):((id=="left_calendar")?"翌月へ":"前月へ");
+//            return node;
+//        },
+//        titleflxI: function(title) {
+//            var node = eh.createElem("div");  // flexアイテムになるdiv要素を生成。
+//            node.textContent = title;
+//            node.id = "title_calendar";
+//            node.style.flex = "1 0 72%";
+//            node.style.textAlign = "center";
+//            node.style.cursor = "pointer";  // マウスポインタの形状を変化させる。
+//            node.title = (vars.L10N)?"Switching between published and updated":"公開日と更新日を切り替える";
+//            return node;
+//        }
+//    };  // end of nd
     var eh = {  // イベントハンドラオブジェクト。
         _node: null,  // 投稿一覧を表示しているノード。
         _timer: null,  // ノードのハイライトを消すタイマーID。
