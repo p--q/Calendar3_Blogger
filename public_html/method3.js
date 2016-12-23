@@ -45,24 +45,15 @@ var Cat = {
   isCat: function(obj){
     return Animal.isAnimal(obj, "cat");
   },
-  prototype: {
-    bark: function(){
-      console.log("mew, mew");
-    },
-    print: function(){
-      console.log("The cat " + this.name + " is a " + this.breed);
-    }
-  }
+  prototype: {}
 };
-Object.setPrototypeOf(Cat.prototype, Animal.prototype);
-    
-    
-    
-    
-    
+Object.setPrototypeOf(Cat.prototype, Dog.prototype);
     
 // 以下は図示のためのコード。
 this.Animal = Animal;
 this.Dog = Dog;
 this.Cat = Cat;
-
+var sparkie = Dog.create("Sparkie", "Border Collie");
+this.sparkie = sparkie;
+var tama = Cat.create("Tama", "mix");
+this.tama = tama;
