@@ -143,43 +143,43 @@ var Calendar3_Blogger = Calendar3_Blogger || function() {
     };  // end of cal
     
 
-    var nd = {
-      create(type){
-        var animal = Object.create(Animal.prototype);
-        animal.type = type;
-        return animal;
+    var Node = {  // ファクトリのプロトタイプ。
+      create: function(type){  // 生成物の種類。
+        var Node = Object.create(Node.prototype);  // 自身のプロトタイプ
+        Node.type = type;
+        return Node;
       },
-      isAnimal(obj, type){
-        if(!Animal.prototype.isPrototypeOf(obj)){
+      isNode: function(obj, type){
+        if(!Node.prototype.isPrototypeOf(obj)){
           return false;
         }
-        return type ? obj.type === type : true;
+        return (type)?obj.type===type:true;
       },
       prototype: {}
     };
     
     
     var Dog = {
-      create(name, breed){
+      create: function(name, breed){
         var dog = Object.create(Dog.prototype); 
-        Object.assign(dog, Animal.create("dog"));
+        Object.assign(dog, Node.create("dog"));
         dog.name = name;
         dog.breed = breed;
         return dog;
       },
-      isDog(obj){
-        return Animal.isAnimal(obj, "dog");
+      isDog: function(obj){
+        return nd.isNode(obj, "dog");
       },
       prototype: {
-        bark(){
+        bark: function(){
           console.log("ruff, ruff");
         },
-        print(){
+        print: function(){
           console.log("The dog " + this.name + " is a " + this.breed);
         }
       }
     };
-    Object.setPrototypeOf(Dog.prototype, Animal.prototype);
+    Object.setPrototypeOf(Dog.prototype, Node.prototype);
     
     
     

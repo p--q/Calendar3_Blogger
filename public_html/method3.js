@@ -18,6 +18,7 @@ var Dog = {
     Object.assign(dog, Animal.create("dog"));
     dog.name = name;
     dog.breed = breed;
+    dog.barking = "ruff, ruff";
     return dog;
   },
   isDog: function(obj){
@@ -25,7 +26,7 @@ var Dog = {
   },
   prototype: {
     bark: function(){
-      console.log("ruff, ruff");
+      console.log(this.barking);
     },
     print: function(){
       console.log("The dog " + this.name + " is a " + this.breed);
